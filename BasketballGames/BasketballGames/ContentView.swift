@@ -7,10 +7,6 @@
 
 import SwiftUI
 
-struct Response: Codable {
-    var results: [Game]
-}
-
 struct Game: Codable, Identifiable {
     var id: Int
     var team: String
@@ -61,10 +57,11 @@ struct ContentView: View {
         
         do {
             let (data, _) = try await URLSession.shared.data(from: url)
-            let decodedResponse = try JSONDecoder().decode([Game].self, from: data)
-            DispatchQueue.main.async {
+            if let decodedResponse = try? JSONDecoder().decode([Game].self, from: data) {
                 results = decodedResponse
             }
+            
+
         } catch {
             print("Invalid Data")
         }
